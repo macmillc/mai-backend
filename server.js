@@ -74,7 +74,7 @@ app.post('/check-license', async (req, res) => {
       return res.json({
         status: 'trial',
         daysRemaining: 30 - daysInTrial,
-        model: 'gpt-4o-mini'
+        mmodel: 'claude-haiku-4-5-20251001'
       });
     }
 
@@ -106,7 +106,7 @@ app.post('/check-license', async (req, res) => {
       if (subscription.status === 'active' || subscription.status === 'trialing') {
         return res.json({
           status: 'active',
-          model: 'gpt-4o'
+          model: 'claude-sonnet-4-20250514'
         });
       } else {
         return res.json({

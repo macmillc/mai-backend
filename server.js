@@ -5,8 +5,8 @@ require('dotenv').config();
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const OpenAI = require('openai');
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const Anthropic = require('@anthropic-ai/sdk');
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 app.use(cors());
 app.use(express.json());
@@ -143,19 +143,16 @@ app.post('/generate-hpf', async (req, res) => {
       return res.status(403).json({ error: 'No active license' });
     }
 
-    // Use specified model (mini for trial, 4o for paid)
-    const completion = await openai.chat.completions.create({
-      model: model || 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: context.systemPrompt },
-        { role: 'user', content: context.userPrompt }
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.3,
-      max_tokens: 350
-    });
-
-    const data = JSON.parse(completion.choices[0].message.content);
+    // Use specified model (model: 'claude-haiku-4-5-20251001' for trial, model: 'claude-sonnet-4-20250514' for paid)
+    const message = await anthropic.messages.create({
+    model: model || 'claude-haiku-4-5-20251001',
+    max_tokens: 350,
+    system: context.systemPrompt,
+    messages: [
+    { role: 'user', content: context.userPrompt }
+  ]
+});
+const data = JSON.parse(message.content[0].text);
     res.json(data);
 
   } catch (err) {
@@ -222,6 +219,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Mai backend running on port ${PORT}`);
-  console.log(`   Trial: GPT-4o-mini (30 days free)`);
-  console.log(`   Paid: GPT-4o ($24/month)`);
+  console.log(`   Trial: Claude Haiku (30 days free)`);
+  console.log(`   Paid: Claude Sonnet ($4.42/month)`);
 });

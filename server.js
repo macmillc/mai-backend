@@ -152,7 +152,8 @@ app.post('/generate-hpf', async (req, res) => {
     { role: 'user', content: context.userPrompt }
   ]
 });
-const data = JSON.parse(message.content[0].text);
+const rawText = message.content[0].text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+const data = JSON.parse(rawText);
     res.json(data);
 
   } catch (err) {

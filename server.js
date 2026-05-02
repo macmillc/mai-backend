@@ -139,7 +139,7 @@ app.post('/generate-hpf', async (req, res) => {
 
     // Verify user has access
     const user = users.get(userId);
-    if (!user && model !== 'gpt-4o-mini') {
+    if (!user && model !== 'claude-haiku-4-5-20251001') {
       return res.status(403).json({ error: 'No active license' });
     }
 

@@ -95,7 +95,7 @@ app.post('/check-license', async (req, res) => {
       return res.json({
         status: 'trial',
         daysRemaining: 30 - daysSinceInstall,
-        model: 'gpt-4o-mini'
+        model: 'claude-haiku-4-5-20251001'
       });
     }
 
